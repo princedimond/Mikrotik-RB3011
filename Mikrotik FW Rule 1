@@ -1,0 +1,13 @@
+/ip firewall filter
+add chain=input protocol=tcp dst-port=22 src-address-list=ssh_blacklist action=drop \
+comment="drop ssh brute forcers" disabled=no
+add chain=input protocol=tcp dst-port=22 connection-state=new \
+src-address-list=ssh_stage3 action=add-src-to-address-list address-list=ssh_blacklist \
+address-list-timeout=10d comment="" disabled=no
+add chain=input protocol=tcp dst-port=22 connection-state=new \
+src-address-list=ssh_stage2 action=add-src-to-address-list address-list=ssh_stage3 \
+address-list-timeout=1m comment="" disabled=no
+add chain=input protocol=tcp dst-port=22 connection-state=new src-address-list=ssh_stage1 \
+action=add-src-to-address-list address-list=ssh_stage2 address-list-timeout=1m comment="" disabled=no
+add chain=input protocol=tcp dst-port=22 connection-state=new action=add-src-to-address-list \
+address-list=ssh_stage1 address-list-timeout=1m comment="" disabled=no
