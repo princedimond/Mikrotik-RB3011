@@ -1,0 +1,4 @@
+/ip firewall filter
+
+add chain=input protocol=tcp dst-port=21 src-address-list=ftp_blacklist action=drop \
+comment="drop ftp attack"
